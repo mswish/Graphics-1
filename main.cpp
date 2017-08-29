@@ -17,6 +17,8 @@ std::vector<float> g_meshVertices; //X1Y1Z1 coordinates of the vertices
 
 std::vector<float> g_meshNormals; //Normals for each vertex
 
+std::vector<float> g_meshCount; //Triangle Count
+
 std::vector<unsigned int> g_meshIndices; //A1B1C1 are the vertices from meshVertices used for the triangle
 
 
@@ -39,29 +41,29 @@ void computeNormals()
 	
 	for (int v = 0; v < g_meshIndices.size() / 3; v++)
 	{
-		float ba_X = g_meshVertices[g_meshIndices[3 * v + 1]] - g_meshVertices[g_meshIndices[3 * v]];
-		float ba_Y = g_meshVertices[g_meshIndices[3 * v + 1] + 1] - g_meshVertices[g_meshIndices[3 * v] + 1];
-		float ba_Z = g_meshVertices[g_meshIndices[3 * v + 1] + 2] - g_meshVertices[g_meshIndices[3 * v] + 2];
+		float ba_X = g_meshVertices[3 * g_meshIndices[3 * v + 1]] - g_meshVertices[3 * g_meshIndices[3 * v]];
+		float ba_Y = g_meshVertices[3 * g_meshIndices[3 * v + 1] + 1] - g_meshVertices[3 * g_meshIndices[3 * v] + 1];
+		float ba_Z = g_meshVertices[3 * g_meshIndices[3 * v + 1] + 2] - g_meshVertices[3 * g_meshIndices[3 * v] + 2];
 
-		float ca_X = g_meshVertices[g_meshIndices[3 * v + 2]] - g_meshVertices[g_meshIndices[3 * v]];
-		float ca_Y = g_meshVertices[g_meshIndices[3 * v + 2] + 1] - g_meshVertices[g_meshIndices[3 * v] + 1];
-		float ca_Z = g_meshVertices[g_meshIndices[3 * v + 2] + 2] - g_meshVertices[g_meshIndices[3 * v] + 2];
+		float ca_X = g_meshVertices[3 * g_meshIndices[3 * v + 2]] - g_meshVertices[3 * g_meshIndices[3 * v]];
+		float ca_Y = g_meshVertices[3 * g_meshIndices[3 * v + 2] + 1] - g_meshVertices[3 * g_meshIndices[3 * v] + 1];
+		float ca_Z = g_meshVertices[3 * g_meshIndices[3 * v + 2] + 2] - g_meshVertices[3 * g_meshIndices[3 * v] + 2];
 
 		float cp_X = ((ba_Y * ca_Z) - (ba_Z * ca_Y));
 		float cp_Y = ((ba_Z * ca_X) - (ba_X * ca_Z));
 		float cp_Z = ((ba_X * ca_Y) - (ba_Y * ca_X));
 
-		g_meshNormals[g_meshIndices[3 * v]] += cp_X;
-		g_meshNormals[g_meshIndices[3 * v] + 1] += cp_Y;
-		g_meshNormals[g_meshIndices[3 * v] + 2] += cp_Z;
+		g_meshNormals[3 * g_meshIndices[3 * v]] += cp_X;
+		g_meshNormals[3 * g_meshIndices[3 * v] + 1] += cp_Y;
+		g_meshNormals[3 * g_meshIndices[3 * v] + 2] += cp_Z;
 
-		g_meshNormals[g_meshIndices[3 * v + 1]] += cp_X;
-		g_meshNormals[g_meshIndices[3 * v + 1] + 1] += cp_Y;
-		g_meshNormals[g_meshIndices[3 * v + 1] + 2] += cp_Z;
+		g_meshNormals[3 * g_meshIndices[3 * v + 1]] += cp_X;
+		g_meshNormals[3 * g_meshIndices[3 * v + 1] + 1] += cp_Y;
+		g_meshNormals[3 * g_meshIndices[3 * v + 1] + 2] += cp_Z;
 
-		g_meshNormals[g_meshIndices[3 * v + 2]] += cp_X;
-		g_meshNormals[g_meshIndices[3 * v + 2] + 1] += cp_Y;
-		g_meshNormals[g_meshIndices[3 * v + 2] + 2] += cp_Z;
+		g_meshNormals[3 * g_meshIndices[3 * v + 2]] += cp_X;
+		g_meshNormals[3 * g_meshIndices[3 * v + 2] + 1] += cp_Y;
+		g_meshNormals[3 * g_meshIndices[3 * v + 2] + 2] += cp_Z;
 	}
 	
 	for (int v = 0; v < g_meshNormals.size() / 3; v++)
@@ -196,9 +198,12 @@ void updateModelViewMatrix()
 
 	// the following code sets a static modelView matrix
 	// this should be replaced with code implementing Task 2 (teapot rotation)
-	g_modelViewMatrix[0] = 1.0f;
+
+	g_modelViewMatrix[0] = cos(getTime());
+	g_modelViewMatrix[2] = sin(getTime());
 	g_modelViewMatrix[5] = 1.0f;
-	g_modelViewMatrix[10] = 1.0f;
+	g_modelViewMatrix[8] = -sin(getTime());
+	g_modelViewMatrix[10] = cos(getTime());
 
 	g_modelViewMatrix[14] = -5.0f;
 	g_modelViewMatrix[15] = 1.0f;
